@@ -2,7 +2,7 @@
 NUMA Characterization Profile: Single d6515 node
 
 Allocates one d6515 (AMD EPYC 7452) for NUMA latency characterization.
-No blockstore — MLC lives in the repo. Boots setup_numa.sh to prepare the node.
+No blockstore - MLC lives in the repo. Boots setup_numa.sh to prepare the node.
 """
 
 import geni.portal as portal
