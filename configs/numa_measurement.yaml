@@ -1,0 +1,15 @@
+hardware: d6515
+target_nps: 4           # preferred; NPS2 acceptable as fallback
+mlc_tarball: "Intel Memory Latency Checker v3.12.tgz"
+mlc_extract_dir: ~/mlc
+results_dir: ~/numa-results
+
+# CXL penalty target: remote/local DDR latency ratio
+cxl_ratio_target_low: 2.4
+cxl_ratio_target_high: 2.6
+
+# lmbench: buffers must exceed L3 (d6515 has 128 MB L3) to force DRAM access
+lmbench_buffer_sizes:
+  - 256m
+  - 1g
+lmbench_stride: 64

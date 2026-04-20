@@ -1,0 +1,12 @@
+# MLC binary — Intel copyright, do not redistribute
+*.tgz
+mlc/
+
+# Results
+numa-results/
+figures/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
