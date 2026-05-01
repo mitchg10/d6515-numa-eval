@@ -83,7 +83,7 @@ NODES=$(seq 0 $((NODE_COUNT - 1)))
 # ----------------------------------------------------------------
 echo ""
 echo "--- Phase 2: MLC idle latency matrix ---"
-sudo "$MLC" --idle_latency -e -r 2>&1 | tee "$RESULTS_DIR/idle_latency_matrix.txt"
+sudo "$MLC" --latency_matrix -e -r 2>&1 | tee "$RESULTS_DIR/idle_latency_matrix.txt"
 echo "  Saved: idle_latency_matrix.txt"
 
 # ----------------------------------------------------------------
@@ -106,9 +106,10 @@ echo "# src_node dst_node latency_ns" > "$PAIRWISE"
 for src in $NODES; do
     for dst in $NODES; do
         echo -n "  node$src → node$dst: "
-        result=$(numactl --cpunodebind="$src" --membind="$dst" \
-                     "$MLC" --idle_latency -b200m 2>&1 | \
-                 grep -E "^\s*[0-9]+\.[0-9]+" | tail -1 || echo "N/A")
+        raw=$(sudo numactl --cpunodebind="$src" --membind="$dst" \
+                  "$MLC" --idle_latency -b200m 2>&1 || true)
+        result=$(echo "$raw" | awk '/Each iteration/ {print $(NF-1)}')
+        [[ -z "$result" ]] && result="N/A"
         echo "$result"
         echo "$src $dst $result" >> "$PAIRWISE"
     done
