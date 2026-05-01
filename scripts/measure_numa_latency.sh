@@ -130,18 +130,20 @@ echo "  Saved: bandwidth_matrix.txt"
 echo ""
 echo "--- Phase 6: lmbench cross-check ---"
 
-# Verify lat_mem_rd is available
-if ! command -v lat_mem_rd &>/dev/null; then
+# Verify lat_mem_rd is available (apt puts it in /usr/lib/lmbench/bin, not PATH)
+LAT_MEM_RD=$(command -v lat_mem_rd 2>/dev/null || \
+             find /usr/lib/lmbench/bin -name lat_mem_rd -type f 2>/dev/null | head -1 || true)
+if [ -z "$LAT_MEM_RD" ]; then
     echo "  WARNING: lat_mem_rd not found. Skipping lmbench phase."
 else
     for buf in 256m 1g; do
         numactl --cpunodebind=0 --membind=0 \
-            lat_mem_rd "$buf" 64 2>&1 > "$RESULTS_DIR/lmbench_local_${buf}.txt"
+            "$LAT_MEM_RD" "$buf" 64 2>&1 > "$RESULTS_DIR/lmbench_local_${buf}.txt"
         echo "  Saved: lmbench_local_${buf}.txt"
 
         if [ "$NODE_COUNT" -ge 2 ]; then
             numactl --cpunodebind=0 --membind=1 \
-                lat_mem_rd "$buf" 64 2>&1 > "$RESULTS_DIR/lmbench_remote_${buf}.txt"
+                "$LAT_MEM_RD" "$buf" 64 2>&1 > "$RESULTS_DIR/lmbench_remote_${buf}.txt"
             echo "  Saved: lmbench_remote_${buf}.txt"
         fi
     done

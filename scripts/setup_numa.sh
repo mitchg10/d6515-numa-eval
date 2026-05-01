@@ -12,6 +12,9 @@ echo "Installing tools..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq numactl lmbench linux-tools-common cpufrequtils hwloc
 
+# lmbench installs to /usr/lib/lmbench/bin, not PATH — symlink what we need
+sudo ln -sf /usr/lib/lmbench/bin/lat_mem_rd /usr/local/bin/lat_mem_rd 2>/dev/null || true
+
 echo "Setting CPU governor to performance..."
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
     echo performance | sudo tee "$cpu" > /dev/null 2>&1 || true
