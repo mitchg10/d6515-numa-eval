@@ -9,8 +9,16 @@ exec > >(tee -a /local/logs/setup_numa.log) 2>&1
 echo "=== NUMA Setup: $(hostname) — $(date) ==="
 
 echo "Installing tools..."
-sudo apt-get update -qq
-sudo apt-get install -y -qq numactl lmbench linux-tools-common cpufrequtils hwloc
+# CloudLab nodes often lack IPv6 routing — force IPv4 to avoid long timeouts.
+APT_IPV4="-o Acquire::ForceIPv4=true"
+# Wait up to 60 s for the network to be reachable before hitting apt.
+for i in $(seq 1 12); do
+    curl -sf --max-time 5 http://us.archive.ubuntu.com/ > /dev/null 2>&1 && break
+    echo "  Waiting for network... ($i/12)"
+    sleep 5
+done
+sudo apt-get $APT_IPV4 update -qq
+sudo apt-get $APT_IPV4 install -y -qq numactl lmbench linux-tools-common cpufrequtils hwloc
 
 # lmbench installs to /usr/lib/lmbench/bin, not PATH — symlink what we need
 sudo ln -sf /usr/lib/lmbench/bin/lat_mem_rd /usr/local/bin/lat_mem_rd 2>/dev/null || true
