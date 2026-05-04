@@ -18,7 +18,9 @@ sudo sed -i \
     /etc/apt/sources.list
 APT_OPTS="-o Acquire::ForceIPv4=true -o Acquire::http::Timeout=20 -o Acquire::Retries=2"
 sudo apt-get $APT_OPTS update -qq
-sudo apt-get $APT_OPTS install -y -qq numactl lmbench linux-tools-common cpufrequtils hwloc
+sudo apt-get $APT_OPTS install -y -qq \
+    numactl lmbench linux-tools-common cpufrequtils hwloc \
+    build-essential libnuma-dev
 
 # lmbench installs to /usr/lib/lmbench/bin, not PATH — symlink what we need
 sudo ln -sf /usr/lib/lmbench/bin/lat_mem_rd /usr/local/bin/lat_mem_rd 2>/dev/null || true
