@@ -1,0 +1,18 @@
+Intel(R) Memory Latency Checker - v3.12
+Command line parameters: --max_bandwidth -e 
+
+Using buffer size of 100.000MiB/thread for reads and an additional 100.000MiB/thread for writes
+
+Measuring Maximum Memory Bandwidths for the system
+Will take several minutes to complete as multiple injection rates will be tried to get the best bandwidth
+Bandwidths are in MB/sec (1 MB/sec = 1,000,000 Bytes/sec)
+Using all the threads from each core if Hyper-threading is enabled
+Using traffic with the following read-write ratios
+ALL Reads        :	131913.8
+3:1 Reads-Writes :	126743.3
+2:1 Reads-Writes :	126931.8
+1:1 Reads-Writes :	132728.6
+Stream-triad like:	130558.1
+All NT writes    :	 85065.6
+1:1 Read-NT write:	138923.7
+

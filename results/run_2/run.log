@@ -1,0 +1,237 @@
+============================================================
+NUMA Latency Characterization — node-0.mitchg-303725.cs620426sp-pg0.utah.cloudlab.us
+Date: Fri May  1 01:56:02 PM MDT 2026
+Results: /users/mitchg/numa-results/20260501_135602
+============================================================
+MLC binary: /users/mitchg/mlc/mlc
+
+--- Phase 0: System snapshot ---
+  Saved: topology.txt, lscpu.txt, cpuinfo.txt, topology_ascii.txt
+
+--- Phase 1: NPS detection ---
+NUMA nodes: 4
+NPS4 confirmed — 4 NUMA domains (optimal).
+
+--- Phase 2: MLC idle latency matrix ---
+Intel(R) Memory Latency Checker - v3.12
+Command line parameters: --latency_matrix -e -r 
+
+Using buffer size of 1800.000MiB
+Measuring idle latencies for random access (in ns)...
+		Numa node
+Numa node	     0	     1	     2	     3	
+       0	  98.5	 107.6	 117.4	 122.8	
+       1	 111.6	  98.8	 122.9	 116.6	
+       2	 121.4	 127.8	  98.7	 109.0	
+       3	 123.3	 120.9	 110.2	  98.4	
+  Saved: idle_latency_matrix.txt
+
+--- Phase 3: MLC loaded latency matrix ---
+Intel(R) Memory Latency Checker - v3.12
+Command line parameters: --loaded_latency -e -r 
+
+Using buffer size of 100.000MiB/thread for reads and an additional 100.000MiB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Using Read-only traffic type
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	529.41	131495.5
+ 00002	528.45	131512.3
+ 00008	525.58	131774.7
+ 00015	524.44	131863.8
+ 00050	522.19	131798.4
+ 00100	396.90	132050.2
+ 00200	152.22	102719.8
+ 00300	139.98	 74647.2
+ 00400	136.02	 58835.5
+ 00500	133.55	 48283.3
+ 00700	130.21	 35600.1
+ 01000	120.84	 25528.4
+ 01300	116.20	 19885.9
+ 01700	115.39	 15396.2
+ 02500	114.57	 10687.4
+ 03500	114.03	  7810.7
+ 05000	113.63	  5645.6
+ 09000	113.16	  3394.1
+ 20000	112.79	  1841.8
+  Saved: loaded_latency_matrix.txt
+
+--- Phase 4: Pairwise numactl latency ---
+  node0 → node0: 110.1
+  node0 → node1: 121.0
+  node0 → node2: 131.5
+  node0 → node3: 135.5
+  node1 → node0: 110.1
+  node1 → node1: 121.1
+  node1 → node2: 131.3
+  node1 → node3: 135.5
+  node2 → node0: 110.2
+  node2 → node1: 121.1
+  node2 → node2: 131.4
+  node2 → node3: 135.5
+  node3 → node0: 111.8
+  node3 → node1: 120.8
+  node3 → node2: 131.5
+  node3 → node3: 135.6
+  Saved: pairwise_latency.txt
+
+--- Phase 5: MLC bandwidth matrix ---
+Intel(R) Memory Latency Checker - v3.12
+Command line parameters: --max_bandwidth -e 
+
+Using buffer size of 100.000MiB/thread for reads and an additional 100.000MiB/thread for writes
+
+Measuring Maximum Memory Bandwidths for the system
+Will take several minutes to complete as multiple injection rates will be tried to get the best bandwidth
+Bandwidths are in MB/sec (1 MB/sec = 1,000,000 Bytes/sec)
+Using all the threads from each core if Hyper-threading is enabled
+Using traffic with the following read-write ratios
+ALL Reads        :	131763.9
+3:1 Reads-Writes :	126584.8
+2:1 Reads-Writes :	126723.2
+1:1 Reads-Writes :	132613.9
+Stream-triad like:	130436.1
+All NT writes    :	 85063.6
+1:1 Read-NT write:	138863.7
+
+  Saved: bandwidth_matrix.txt
+
+--- Phase 6: lmbench cross-check ---
+"stride=64
+0.00049 1.197
+0.00098 1.199
+0.00195 1.197
+0.00293 1.197
+0.00391 1.197
+0.00586 1.200
+0.00781 1.198
+0.01172 1.197
+0.01562 1.197
+0.02344 1.197
+0.03125 1.198
+0.04688 1.631
+0.06250 1.633
+0.09375 1.627
+0.12500 1.627
+0.18750 1.625
+0.25000 1.628
+0.37500 1.711
+0.50000 1.785
+0.75000 1.828
+1.00000 1.848
+1.50000 1.865
+2.00000 1.866
+3.00000 1.876
+4.00000 1.887
+6.00000 1.879
+8.00000 1.883
+12.00000 2.375
+16.00000 3.455
+24.00000 4.876
+32.00000 4.969
+48.00000 4.959
+64.00000 4.971
+96.00000 4.930
+128.00000 4.821
+192.00000 4.797
+256.00000 4.801
+
+  Saved: lmbench_local_256m.txt
+"stride=64
+0.00049 1.197
+0.00098 1.197
+0.00195 1.197
+0.00293 1.197
+0.00391 1.198
+0.00586 1.197
+0.00781 1.198
+0.01172 1.198
+0.01562 1.198
+0.02344 1.197
+0.03125 1.197
+0.04688 1.631
+0.06250 1.629
+0.09375 1.627
+0.12500 1.629
+0.18750 1.625
+0.25000 1.625
+0.37500 1.631
+0.50000 1.783
+0.75000 1.847
+1.00000 1.850
+1.50000 1.857
+2.00000 1.866
+3.00000 1.894
+4.00000 1.881
+6.00000 1.885
+8.00000 1.885
+12.00000 2.068
+16.00000 3.380
+24.00000 5.082
+32.00000 5.119
+48.00000 5.075
+64.00000 5.079
+96.00000 5.084
+128.00000 5.082
+192.00000 4.962
+256.00000 4.956
+
+  Saved: lmbench_remote_256m.txt
+"stride=64
+0.00049 1.199
+0.00098 1.198
+0.00195 1.198
+0.00293 1.199
+0.00391 1.197
+0.00586 1.197
+0.00781 1.197
+0.01172 1.197
+0.01562 1.198
+0.02344 1.200
+0.03125 1.198
+0.04688 1.630
+0.06250 1.632
+0.09375 1.627
+0.12500 1.626
+0.18750 1.626
+0.25000 1.731
+0.37500 1.686
+0.50000 1.786
+0.75000 1.833
+1.00000 1.852
+
+  Saved: lmbench_local_1g.txt
+"stride=64
+0.00049 1.199
+0.00098 1.197
+0.00195 1.197
+0.00293 1.197
+0.00391 1.197
+0.00586 1.197
+0.00781 1.198
+0.01172 1.198
+0.01562 1.198
+0.02344 1.198
+0.03125 1.198
+0.04688 1.631
+0.06250 1.629
+0.09375 1.628
+0.12500 1.627
+0.18750 1.626
+0.25000 1.629
+0.37500 1.720
+0.50000 1.773
+0.75000 1.830
+1.00000 1.869
+
+  Saved: lmbench_remote_1g.txt
+
+============================================================
+All phases complete.
+NPS mode : NPS4
+Results  : /users/mitchg/numa-results/20260501_135602
+Next step: python3 analysis/parse_numa_results.py /users/mitchg/numa-results/20260501_135602
+============================================================

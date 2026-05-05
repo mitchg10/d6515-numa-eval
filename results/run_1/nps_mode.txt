@@ -1,0 +1,3 @@
+NUMA nodes: 4
+NPS4 confirmed — 4 NUMA domains (optimal).
+NPS_MODE=NPS4

@@ -1,0 +1,11 @@
+Intel(R) Memory Latency Checker - v3.12
+Command line parameters: --latency_matrix -e -r 
+
+Using buffer size of 1800.000MiB
+Measuring idle latencies for random access (in ns)...
+		Numa node
+Numa node	     0	     1	     2	     3	
+       0	  98.4	 107.6	 117.4	 122.8	
+       1	 111.9	  98.7	 127.0	 122.9	
+       2	 116.9	 127.8	  98.7	 110.2	
+       3	 123.2	 117.3	 107.7	  98.5	

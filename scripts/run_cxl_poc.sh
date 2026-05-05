@@ -7,7 +7,7 @@
 set -euo pipefail
 
 echo "=== Building CXL POC ==="
-g++ -O2 -std=c++17 -o cxl_poc cxl_poc.cpp -lnuma -lpthread
+g++ -O2 -std=c++17 -o cxl_poc scripts/cxl_poc.cpp -lnuma -lpthread
 echo "Build OK"
 
 # Check NUMA topology first

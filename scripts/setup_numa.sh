@@ -9,18 +9,35 @@ exec > >(tee -a /local/logs/setup_numa.log) 2>&1
 echo "=== NUMA Setup: $(hostname) — $(date) ==="
 
 echo "Installing tools..."
-# CloudLab Utah nodes cannot reach us.archive.ubuntu.com (IPv6 unreachable,
-# IPv4 times out). Strip the regional prefix so apt resolves to a different
-# CDN endpoint, force IPv4, and cap per-connection timeout so we never hang.
-sudo sed -i \
-    -e 's|http://us\.archive\.ubuntu\.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
-    -e 's|http://security\.ubuntu\.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' \
-    /etc/apt/sources.list
-APT_OPTS="-o Acquire::ForceIPv4=true -o Acquire::http::Timeout=20 -o Acquire::Retries=2"
-sudo apt-get $APT_OPTS update -qq
-sudo apt-get $APT_OPTS install -y -qq \
-    numactl lmbench linux-tools-common cpufrequtils hwloc \
-    build-essential libnuma-dev
+# CloudLab Utah nodes have no route to Canonical's apt servers and the local
+# emulab mirror only carries emulab-specific packages. Required .deb files
+# must be staged in project storage — same pattern as MLC.
+#
+# Stage once from a machine with Ubuntu 22.04 + internet:
+#   apt-get download numactl libnuma1 libnuma-dev \
+#       lmbench cpufrequtils libcpufreq0 \
+#       hwloc libhwloc15 libhwloc-plugins
+#   scp *.deb <user>@users.cloudlab.us:/proj/<project>/debs/
+NEED_PKGS=(numactl libnuma-dev lmbench cpufrequtils hwloc)
+MISSING=()
+for p in "${NEED_PKGS[@]}"; do
+    dpkg -l "$p" 2>/dev/null | grep -q "^ii" || MISSING+=("$p")
+done
+if [ "${#MISSING[@]}" -gt 0 ]; then
+    echo "  Missing packages: ${MISSING[*]}"
+    DEB_DIR=$(find /proj -type d -name "debs" 2>/dev/null | head -1 || true)
+    if [ -z "$DEB_DIR" ]; then
+        echo "ERROR: No /proj/.../debs directory found." >&2
+        echo "  Stage required .deb files once:" >&2
+        echo "  apt-get download numactl libnuma1 libnuma-dev lmbench cpufrequtils libcpufreq0 hwloc libhwloc15 libhwloc-plugins" >&2
+        echo "  scp *.deb <user>@users.cloudlab.us:/proj/<project>/debs/" >&2
+        exit 1
+    fi
+    echo "  Installing from staged debs: $DEB_DIR"
+    sudo dpkg -i "$DEB_DIR"/*.deb
+else
+    echo "  All packages already installed."
+fi
 
 # lmbench installs to /usr/lib/lmbench/bin, not PATH — symlink what we need
 sudo ln -sf /usr/lib/lmbench/bin/lat_mem_rd /usr/local/bin/lat_mem_rd 2>/dev/null || true

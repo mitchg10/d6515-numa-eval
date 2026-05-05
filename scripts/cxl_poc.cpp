@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <thread>
+#include <unistd.h>
 #include <vector>
 #include <numa.h>
 #include <x86intrin.h>   // __rdtsc, _mm_pause
